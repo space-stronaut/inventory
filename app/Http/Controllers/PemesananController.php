@@ -85,6 +85,9 @@ class PemesananController extends Controller
                 return redirect()->back()->with('gagal', 'Jumlah barang melebihi stok bahan!');
             }else{
                 $barang = Bahan::find($request->id_bahan[$i])->harga_jual;
+                Bahan::find($request->id_bahan[$i])->update([
+                    'tanggal_jual_terakhir' => now()
+                ]);
                 $bahan = Bahan::find($request->id_bahan[$i])->stok;
                 Bahan::find($request->id_bahan[$i])->update([
                     'stok' => $bahan - $request->jumlah[$i]

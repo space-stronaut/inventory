@@ -9,9 +9,11 @@
                     <div>
                         Bahan
                     </div>
+                    @if (Auth::user()->role == 'petugas')
                     <div>
                         <a href="{{ route('bahan.create') }}" class="btn btn-primary">Buat Data</a>
                     </div>
+                    @endif
                 </div>
 
                 <div class="card-body">
@@ -28,7 +30,9 @@
                                 <th>Tanggal Beli</th>
                                 <th>Tanggal Jual Terakhir</th>
                                 <th>Jenis</th>
+                                @if (Auth::user()->role == 'petugas')
                                 <th>Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +48,7 @@
                                     <td>{{ $item->tanggal_beli }}</td>
                                     <td>{{ $item->tanggal_jual_terakhir == NULL ? 'Belum Ada Riwayat Transaksi' : $item->tanggal_jual_terakhir }}</td>
                                     <td>{{ $item->jenis }}</td>
+                                    @if (Auth::user()->role == 'petugas')
                                     <td class="d-flex align-items-center">
                                         <a href="{{ route('bahan.edit', $item->id) }}" class="btn btn-warning me-2">Edit</a>
                                         <a href="{{ route('bahan.show', $item->id) }}" class="btn btn-info">Lihat</a>
@@ -55,6 +60,7 @@
                                                 </button>
                                             </form>
                                     </td>
+                                    @endif
                                 </tr>
                             @empty
                                 <tr>
