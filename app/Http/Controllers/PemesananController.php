@@ -28,7 +28,7 @@ class PemesananController extends Controller
         $raws = DB::table('detail_pemesanans')
         ->select(DB::raw('sum(jumlah_barang) as count, bahans.nama_bahan as nama_bahan, sum(detail_pemesanans.harga_beli) as harga'))
         ->join('bahans', 'bahans.id', 'detail_pemesanans.id_bahan')
-        ->groupBy('id_bahan')
+        ->groupBy('detail_pemesanans.id_bahan')
         ->get();
         $bahans = Bahan::all();
 
