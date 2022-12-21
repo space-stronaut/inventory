@@ -95,6 +95,9 @@
                     </table>
                     @endif
                 </div>
+                @if (Auth::user()->role != 'pengguna')
+                        <a href="/export/pemesanan" class="btn btn-success">Export Laporan</a>
+                    @endif
             </div>
         </div>
     </div>
