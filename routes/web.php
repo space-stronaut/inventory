@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 Auth::routes();
@@ -28,4 +28,6 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::resource('bahan', BahanController::class);
 Route::resource('pemesanan', PemesananController::class);
 Route::resource('peminjaman', PeminjamanController::class);
+Route::get('/export/pemesanan', [PemesananController::class, 'export']);
+Route::post('/validasi/pemesanan/{id}', [PemesananController::class, 'validasi']);
 Route::resource('alat', AlatController::class);

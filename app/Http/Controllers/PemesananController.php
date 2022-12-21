@@ -7,7 +7,10 @@ use App\Models\Pemesanan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Alert;
+use App\Exports\DetailPemesananExport;
 use App\Models\DetailPemesanan;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PemesananController extends Controller
 {
@@ -22,8 +25,28 @@ class PemesananController extends Controller
         $sudah_dibayar = Pemesanan::where('status', 'dibayar')->get();
         $pesanan_selesai = Pemesanan::where('status', 'selesai')->get();
         $semuas = Pemesanan::all();
+        $raws = DB::table('detail_pemesanans')
+        ->select(DB::raw('sum(jumlah_barang) as count, bahans.nama_bahan as nama_bahan, sum(detail_pemesanans.harga_beli) as harga'))
+        ->join('bahans', 'bahans.id', 'detail_pemesanans.id_bahan')
+        ->groupBy('id_bahan')
+        ->get();
+        $bahans = Bahan::all();
 
-        return view('pemesanan.index', compact('belum_dibayar', 'sudah_dibayar', 'pesanan_selesai', 'semuas'));
+        return view('pemesanan.index', compact('belum_dibayar', 'sudah_dibayar', 'pesanan_selesai', 'semuas', 'raws', 'bahans'));
+    }
+
+    public function validasi($id)
+    {
+        Pemesanan::find($id)->update([
+            'status' => 'selesai'
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function export()
+    {
+        return Excel::download(new DetailPemesananExport, 'excel.xlsx');
     }
 
     /**

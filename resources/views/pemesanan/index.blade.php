@@ -9,9 +9,11 @@
                     <div>
                         Pemesanan
                     </div>
+                    @if (Auth::user()->role == 'pengguna')
                     <div>
                         <a href="{{ route('pemesanan.create') }}" class="btn btn-primary">Pesan</a>
                     </div>
+                    @endif
                 </div>
 
                 <div class="card-body">
@@ -20,12 +22,12 @@
                             <tr>
                                 <th>No</th>
                                 <th>Pengguna</th>
-                                <th>Durasi Pemakaian</th>
+                                {{-- <th>Durasi Pemakaian</th> --}}
                                 <th>Petugas</th>
-                                <th>Nama Bahan</th>
+                                {{-- <th>Nama Bahan</th>
                                 <th>Tanggal Beli</th>
                                 <th>Harga Beli</th>
-                                <th>Jumlah Barang</th>
+                                <th>Jumlah Barang</th> --}}
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -49,6 +51,15 @@
                                         @else
                                             <div class="badge bg-success text-uppercase">{{ $item->status }}</div>
                                         @endif
+
+                                        @if (Auth::user()->role == 'petugas')
+                                            <th>
+                                                <form action="/validasi/pemesanan/{{ $item->id }}" method="post">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success">Validasi</button>
+                                                </form>
+                                            </th>
+                                        @endif
                                     </td>
                                     <td class="d-flex align-items-center">
                                         <a href="{{ route('pemesanan.show', $item->id) }}" class="btn btn-info">Detail</a>
@@ -61,6 +72,28 @@
                             @endforelse
                         </tbody>
                     </table>
+                    @if (Auth::user()->role != 'pengguna')
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th>Bahan</th>
+                                <th>Total Penjualan</th>
+                                <th>Total Pendapatan</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($raws as $item)
+                                <tr>
+                                    <th>{{ $item->nama_bahan }}</th>
+                                    <th>{{ $item->count }}</th>
+                                    <th>@currency($item->harga)</th>
+                                    {{-- {{$item}} --}}
+                                </tr>
+                            @endforeach
+                            {{-- {{$raws}} --}}
+                        </tbody>
+                    </table>
+                    @endif
                 </div>
             </div>
         </div>
